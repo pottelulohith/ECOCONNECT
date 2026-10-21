@@ -34,10 +34,8 @@ export async function clearAllDemoData() {
  * without inserting any dummy/demo records.
  */
 export async function seedInitialData() {
-  // Purge demo records first
-  await clearAllDemoData();
-
-  // Ensure default demo users exist for login authentication
+  // Ensure default demo users exist for login authentication. Never clear
+  // application records or reset existing account balances during startup.
   const defaultUsers = [
     {
       name: process.env.SEED_ADMIN_NAME || 'Officer R. Vance',
@@ -78,9 +76,6 @@ export async function seedInitialData() {
     const existing = await User.findOne({ email: userConfig.email });
     if (!existing) {
       await User.create(userConfig);
-    } else {
-      existing.walletPoints = 0;
-      await existing.save();
     }
   }
 

@@ -15,6 +15,10 @@ async function startServer() {
   try {
     await connectDB();
   } catch (err) {
+    if (process.env.NODE_ENV === 'production') {
+      console.error('Database connection is required in production:', err.message);
+      process.exit(1);
+    }
     console.warn('Database startup warning:', err.message);
   }
 

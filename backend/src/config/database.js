@@ -31,8 +31,11 @@ async function setupMemoryServer() {
 
 export async function connectDB() {
   let uri = process.env.MONGODB_URI;
+  const isProduction = process.env.NODE_ENV === 'production';
 
   if (!uri || uri.includes('<password>')) {
+    const error = new Error('A valid MONGODB_URI is required.');
+    if (isProduction) throw error;
     console.log('ℹ️  No valid MONGODB_URI found in environment.');
     return await setupMemoryServer();
   }
@@ -51,7 +54,10 @@ export async function connectDB() {
     return true;
   } catch (err) {
     console.warn(`⚠️  MongoDB Atlas connection failed: ${err.message}`);
-    console.warn('👉  Atlas cluster may require IP Whitelisting (0.0.0.0/0).');
+    if (isProduction) {
+      throw new Error(`Production MongoDB connection failed: ${err.message}`, { cause: err });
+    }
+    console.warn('👉  Atlas cluster may require IP Whitelisting.');
     return await setupMemoryServer();
   }
 }

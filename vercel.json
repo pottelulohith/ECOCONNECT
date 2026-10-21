@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://ecoconnect-8gfu.onrender.com/api/:path*"
+    },
+    {
+      "source": "/uploads/:path*",
+      "destination": "https://ecoconnect-8gfu.onrender.com/uploads/:path*"
+    }
+  ]
+}
